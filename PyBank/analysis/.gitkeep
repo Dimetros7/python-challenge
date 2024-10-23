@@ -1,0 +1,56 @@
+import csv
+improt os
+file_to_load = os.path.join("Resources", "election_data.cvs")
+file_to_output = os.path.join("analysis", "election_analysis.text")
+
+# Initialize variables
+total_votes = 0
+candidate_votes = defaultdict(int)
+
+# Load the data
+with open('election_data.csv') as csvfile:
+    csvreader = csv.reader(csvfile)
+    header = next(csvreader)  # Skip the header
+
+    for row in csvreader:
+        total_votes += 1
+        candidate = row[2]
+        candidate_votes[candidate] += 1
+
+# Calculate percentages and determine the winner
+winner = ""
+max_votes = 0
+results = []
+
+for candidate, votes in candidate_votes.items():
+    percentage = (votes / total_votes) * 100
+    results.append((candidate, percentage, votes))
+
+    if votes > max_votes:
+        max_votes = votes
+        winner = candidate
+
+# Print results
+print("Election Results")
+print("-------------------------")
+print(f"Total Votes: {total_votes}")
+print("-------------------------")
+for candidate, percentage, votes in results:
+    print(f"{candidate}: {percentage:.3f}% ({votes})")
+print("-------------------------")
+print(f"Winner: {winner}")
+print("-------------------------")
+
+# Export results to a text file
+with open('election_results.txt', 'w') as txtfile:
+    txtfile.write("Election Results\n")
+    txtfile.write("-------------------------\n")
+    txtfile.write(f"Total Votes: {total_votes}\n")
+    txtfile.write("-------------------------\n")
+    for candidate, percentage, votes in results:
+        txtfile.write(f"{candidate}: {percentage:.3f}% ({votes})\n")
+    txtfile.write("-------------------------\n")
+    txtfile.write(f"Winner: {winner}\n")
+    txtfile.write("-------------------------\n")
+
+
